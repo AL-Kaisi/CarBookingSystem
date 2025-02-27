@@ -113,6 +113,3 @@ This project is licensed under the MIT License.
 
 ---
 
-## Contact
-For any issues or enhancements, please raise a GitHub issue or contact the development team.
-
