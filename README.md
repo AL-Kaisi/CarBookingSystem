@@ -64,7 +64,7 @@ The Car Booking System is a complete car rental management solution built with P
 *Step-by-step booking creation with real-time availability*
 
 ### Reports
-![Reports Screenshot](docs/screenshots/reports.png)
+![Reports Screenshot](docs/screenshots/report.png)
 *Revenue reports with visual charts*
 
 ## Features
