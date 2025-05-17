@@ -1,0 +1,148 @@
+<%- include('../layout', { body: ` 
+<div class="booking-form">
+    <h1>Create New Booking</h1>
+    
+    <form id="bookingForm" action="/bookings/create" method="POST">
+        <div class="form-section">
+            <h2>Customer Information</h2>
+            
+            <div class="form-group">
+                <label>Customer ID (leave blank for new customer)</label>
+                <input type="number" name="customer_id" id="customer_id" class="form-control">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" name="forname" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" name="surname" required class="form-control">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select name="gender" required class="form-control">
+                        <option value="">Select...</option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required class="form-control">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" name="phone" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" name="address1" required class="form-control">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Town</label>
+                    <input type="text" name="town" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Postcode</label>
+                    <input type="text" name="postcode" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Country</label>
+                    <input type="text" name="country" value="UK" required class="form-control">
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Booking Details</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Vehicle Category</label>
+                    <select name="vehicle_type" id="vehicle_type" required class="form-control">
+                        <option value="">Select...</option>
+                        ${categories.map(cat => `
+                            <option value="${cat.vehicle_category_code}">${cat.vehicle_category_description}</option>
+                        `).join('')}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>From Date</label>
+                    <input type="date" name="date_from" id="date_from" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>To Date</label>
+                    <input type="date" name="date_to" id="date_to" required class="form-control">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <button type="button" id="checkAvailability" class="btn btn-secondary">Check Availability</button>
+            </div>
+            
+            <div id="availabilityResult" class="availability-result" style="display:none;">
+                <!-- Availability results will be shown here -->
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create Booking</button>
+            <a href="/bookings" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+document.getElementById('checkAvailability').addEventListener('click', async function() {
+    const category = document.getElementById('vehicle_type').value;
+    const dateFrom = document.getElementById('date_from').value;
+    const dateTo = document.getElementById('date_to').value;
+    
+    if (!category || !dateFrom || !dateTo) {
+        alert('Please select vehicle category and dates');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/bookings/check-availability', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ category, date_from: dateFrom, date_to: dateTo })
+        });
+        
+        const data = await response.json();
+        const resultDiv = document.getElementById('availabilityResult');
+        
+        if (data.available) {
+            resultDiv.innerHTML = '<p class="success">Vehicles are available!</p>' +
+                '<ul>' + data.vehicles.map(v => 
+                    '<li>' + v.reg_number + ' - ' + v.model_name + ' (£' + v.daily_hire_rate + '/day)</li>'
+                ).join('') + '</ul>';
+        } else {
+            resultDiv.innerHTML = '<p class="error">No vehicles available for the selected dates</p>';
+        }
+        
+        resultDiv.style.display = 'block';
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error checking availability');
+    }
+});
+</script>
+` }) %>

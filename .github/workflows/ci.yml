@@ -1,0 +1,76 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  static-analysis:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: SQL Linter
+      run: |
+        echo "Running SQL static analysis..."
+        # Add SQL linting tools here when needed
+    
+    - name: Check file structure
+      run: |
+        echo "Checking project structure..."
+        test -f scripts/install.sql
+        test -f scripts/uninstall.sql
+        test -d sql/packages
+        test -d sql/triggers
+        test -d docs
+    
+  documentation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Check documentation
+      run: |
+        echo "Verifying documentation exists..."
+        test -f README.md
+        test -f CONTRIBUTING.md
+        test -f LICENSE
+    
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Security scan
+      run: |
+        echo "Running security checks..."
+        # Check for hardcoded credentials
+        ! grep -r "password\s*=\s*['\"][^'\"]*['\"]" --include="*.sql" .
+        # Check for SQL injection vulnerabilities
+        echo "Checking for potential SQL injection issues..."
+        # Add more security checks as needed
+
+  release:
+    needs: [static-analysis, documentation, security-scan]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Create release package
+      run: |
+        mkdir -p release
+        cp -r sql scripts docs *.md LICENSE release/
+        tar -czf car-booking-system-release.tar.gz release/
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-package
+        path: car-booking-system-release.tar.gz

@@ -1,0 +1,63 @@
+<%- include('../layout', { body: ` 
+<div class="availability-check">
+    <h1>Check Vehicle Availability</h1>
+    
+    <form action="/vehicles/availability" method="GET" class="availability-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label>Vehicle Category</label>
+                <select name="category" required class="form-control">
+                    <option value="">All Categories</option>
+                    <option value="COMPACT" ${searchParams.category === 'COMPACT' ? 'selected' : ''}>Compact</option>
+                    <option value="SALOON" ${searchParams.category === 'SALOON' ? 'selected' : ''}>Saloon</option>
+                    <option value="SUV" ${searchParams.category === 'SUV' ? 'selected' : ''}>SUV</option>
+                    <option value="LUXURY" ${searchParams.category === 'LUXURY' ? 'selected' : ''}>Luxury</option>
+                    <option value="VAN" ${searchParams.category === 'VAN' ? 'selected' : ''}>Van</option>
+                    <option value="TRUCK" ${searchParams.category === 'TRUCK' ? 'selected' : ''}>Truck</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>From Date</label>
+                <input type="date" name="date_from" value="${searchParams.date_from || ''}" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label>To Date</label>
+                <input type="date" name="date_to" value="${searchParams.date_to || ''}" required class="form-control">
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Check Availability</button>
+        </div>
+    </form>
+    
+    ${vehicles && vehicles.length > 0 ? `
+        <div class="availability-results">
+            <h2>Available Vehicles</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Registration</th>
+                        <th>Model</th>
+                        <th>Daily Rate</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${vehicles.map(vehicle => `
+                        <tr>
+                            <td>${vehicle.reg_number}</td>
+                            <td>${vehicle.model_name}</td>
+                            <td>£${vehicle.daily_hire_rate}</td>
+                            <td>
+                                <a href="/bookings/new?vehicle=${vehicle.reg_number}&from=${searchParams.date_from}&to=${searchParams.date_to}" 
+                                   class="btn btn-sm btn-primary">Book</a>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    ` : vehicles ? '<p class="no-results">No vehicles available for the selected dates.</p>' : ''}
+</div>
+` }) %>

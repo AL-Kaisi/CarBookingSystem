@@ -1,0 +1,51 @@
+<%- include('../layout', { body: ` 
+<div class="bookings-list">
+    <h1>Bookings</h1>
+    
+    <div class="page-actions">
+        <a href="/bookings/new" class="btn btn-primary">New Booking</a>
+    </div>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Vehicle</th>
+                <th>Category</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${bookings.map(booking => `
+                <tr>
+                    <td>${booking.booking_id}</td>
+                    <td>${booking.cust_forename} ${booking.cust_surname}<br>
+                        <small>${booking.email_address}</small>
+                    </td>
+                    <td>${booking.reg_number}</td>
+                    <td>${booking.vehicle_category_code}</td>
+                    <td>${new Date(booking.date_from).toLocaleDateString('en-GB')}</td>
+                    <td>${new Date(booking.date_to).toLocaleDateString('en-GB')}</td>
+                    <td><span class="badge badge-${booking.booking_status_code}">${booking.booking_status_description}</span></td>
+                    <td>
+                        <form action="/bookings/update-status" method="POST" style="display:inline;">
+                            <input type="hidden" name="booking_id" value="${booking.booking_id}">
+                            <select name="status" onchange="this.form.submit()" class="form-control form-control-sm">
+                                <option value="">Change Status...</option>
+                                <option value="confirmed" ${booking.booking_status_code === 'confirmed' ? 'disabled' : ''}>Confirm</option>
+                                <option value="cancelled" ${booking.booking_status_code === 'cancelled' ? 'disabled' : ''}>Cancel</option>
+                                <option value="completed" ${booking.booking_status_code === 'completed' ? 'disabled' : ''}>Complete</option>
+                                <option value="no_show" ${booking.booking_status_code === 'no_show' ? 'disabled' : ''}>No Show</option>
+                            </select>
+                        </form>
+                    </td>
+                </tr>
+            `).join('')}
+        </tbody>
+    </table>
+</div>
+` }) %>

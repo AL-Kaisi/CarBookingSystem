@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Booking System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <a href="/">Car Booking System</a>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="/">Dashboard</a></li>
+                    <li><a href="/customers">Customers</a></li>
+                    <li><a href="/vehicles">Vehicles</a></li>
+                    <li><a href="/bookings">Bookings</a></li>
+                    <li><a href="/reports">Reports</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <% if (success_msg && success_msg.length > 0) { %>
+            <div class="alert alert-success">
+                <%= success_msg %>
+            </div>
+        <% } %>
+        
+        <% if (error_msg && error_msg.length > 0) { %>
+            <div class="alert alert-danger">
+                <%= error_msg %>
+            </div>
+        <% } %>
+        
+        <% if (error && error.length > 0) { %>
+            <div class="alert alert-danger">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <%- body %>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Car Booking System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

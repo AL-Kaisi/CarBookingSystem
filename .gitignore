@@ -1,0 +1,65 @@
+# Oracle specific
+*.log
+*.trc
+*.aud
+*.dmp
+*.exp
+*.imp
+
+# SQL*Plus
+afiedt.buf
+sqlnet.log
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*~
+
+# OS specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE specific
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Build outputs
+/dist/
+/build/
+/out/
+
+# Test outputs
+/test-results/
+/coverage/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Documentation build
+/docs/_build/
+/docs/.doctrees/
+
+# Package files
+*.tar.gz
+*.zip
+
+# Credentials (never commit these!)
+*credentials*
+*password*
+*secret*

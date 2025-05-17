@@ -1,0 +1,76 @@
+<%- include('../layout', { body: ` 
+<div class="vehicle-form">
+    <h1>Add/Update Vehicle</h1>
+    
+    <form action="/vehicles/create" method="POST">
+        <div class="form-group">
+            <label>Registration Number</label>
+            <input type="text" name="reg_number" required class="form-control" pattern="^[A-Z0-9 ]+$">
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label>Manufacturer</label>
+                <select name="manufacturer_code" required class="form-control">
+                    <option value="">Select...</option>
+                    ${manufacturers.map(manufacturer => `
+                        <option value="${manufacturer.manufacturer_code}">${manufacturer.manufacturer_name}</option>
+                    `).join('')}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Model</label>
+                <select name="model_code" required class="form-control">
+                    <option value="">Select...</option>
+                    ${models.map(model => `
+                        <option value="${model.model_code}">${model.model_name}</option>
+                    `).join('')}
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label>Category</label>
+                <select name="vehicle_category_code" required class="form-control">
+                    <option value="">Select...</option>
+                    ${categories.map(category => `
+                        <option value="${category.vehicle_category_code}">${category.vehicle_category_description}</option>
+                    `).join('')}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Current Mileage</label>
+                <input type="number" name="current_mileage" required class="form-control" min="0">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label>Daily Hire Rate (£)</label>
+                <input type="number" name="daily_hire_rate" required class="form-control" step="0.01" min="0">
+            </div>
+            <div class="form-group">
+                <label>MOT Due Date</label>
+                <input type="date" name="date_mot_due" required class="form-control">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label>Model Name</label>
+                <input type="text" name="model_name" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Manufacturer Name</label>
+                <input type="text" name="manufacturer_name" required class="form-control">
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Vehicle</button>
+            <a href="/vehicles" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+` }) %>

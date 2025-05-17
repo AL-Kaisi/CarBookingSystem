@@ -1,0 +1,69 @@
+<%- include('layout', { body: ` 
+<div class="reports">
+    <h1>Reports</h1>
+    
+    <div class="report-section">
+        <h2>Monthly Revenue Report</h2>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Total Bookings</th>
+                    <th>Total Revenue</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${revenueReport.map(row => `
+                    <tr>
+                        <td>${row.month}</td>
+                        <td>${row.total_bookings}</td>
+                        <td>£${parseFloat(row.total_revenue).toFixed(2)}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Total</th>
+                    <th>${revenueReport.reduce((sum, row) => sum + parseInt(row.total_bookings), 0)}</th>
+                    <th>£${revenueReport.reduce((sum, row) => sum + parseFloat(row.total_revenue), 0).toFixed(2)}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+    <div class="chart-container">
+        <canvas id="revenueChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ${JSON.stringify(revenueReport.map(row => row.month))},
+            datasets: [{
+                label: 'Monthly Revenue (£)',
+                data: ${JSON.stringify(revenueReport.map(row => parseFloat(row.total_revenue)))},
+                backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '£' + value;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+` }) %>

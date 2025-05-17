@@ -1,0 +1,42 @@
+<%- include('../layout', { body: ` 
+<div class="customers-list">
+    <h1>Customers</h1>
+    
+    <div class="page-actions">
+        <a href="/customers/new" class="btn btn-primary">Add Customer</a>
+        
+        <form action="/customers/search" method="GET" class="search-form">
+            <input type="text" name="query" placeholder="Search customers..." 
+                   value="${typeof searchQuery !== 'undefined' ? searchQuery : ''}" class="form-control">
+            <button type="submit" class="btn btn-secondary">Search</button>
+        </form>
+    </div>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Location</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${customers.map(customer => `
+                <tr>
+                    <td>${customer.customer_id}</td>
+                    <td>${customer.cust_forename} ${customer.cust_surname}</td>
+                    <td>${customer.email_address}</td>
+                    <td>${customer.phone_number || '-'}</td>
+                    <td>${customer.town}, ${customer.post_code}</td>
+                    <td>
+                        <a href="/customers/${customer.customer_id}" class="btn btn-sm btn-info">View</a>
+                    </td>
+                </tr>
+            `).join('')}
+        </tbody>
+    </table>
+</div>
+` }) %>

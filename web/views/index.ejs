@@ -1,0 +1,58 @@
+<%- include('layout', { body: ` 
+<div class="dashboard">
+    <h1>Dashboard</h1>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Customers</h3>
+            <p class="stat-number">${stats.customers}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Vehicles</h3>
+            <p class="stat-number">${stats.vehicles}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Active Bookings</h3>
+            <p class="stat-number">${stats.activeBookings}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Today's Bookings</h3>
+            <p class="stat-number">${stats.todayBookings}</p>
+        </div>
+    </div>
+
+    <div class="dashboard-actions">
+        <a href="/bookings/new" class="btn btn-primary">New Booking</a>
+        <a href="/customers/new" class="btn btn-secondary">Add Customer</a>
+        <a href="/vehicles/new" class="btn btn-secondary">Add Vehicle</a>
+    </div>
+
+    <div class="recent-bookings">
+        <h2>Recent Bookings</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Customer</th>
+                    <th>Vehicle</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${recentBookings.map(booking => `
+                    <tr>
+                        <td>${booking.booking_id}</td>
+                        <td>${booking.cust_forename} ${booking.cust_surname}</td>
+                        <td>${booking.reg_number}</td>
+                        <td>${new Date(booking.date_from).toLocaleDateString('en-GB')}</td>
+                        <td>${new Date(booking.date_to).toLocaleDateString('en-GB')}</td>
+                        <td><span class="badge badge-${booking.booking_status_code}">${booking.booking_status_code}</span></td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+</div>
+` }) %>

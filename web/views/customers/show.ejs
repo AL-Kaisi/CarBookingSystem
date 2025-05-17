@@ -1,0 +1,70 @@
+<%- include('../layout', { body: ` 
+<div class="customer-details">
+    <h1>Customer Details</h1>
+    
+    <div class="info-card">
+        <h2>${customer.cust_forename} ${customer.cust_surname}</h2>
+        
+        <div class="info-grid">
+            <div>
+                <label>Customer ID:</label>
+                <p>${customer.customer_id}</p>
+            </div>
+            <div>
+                <label>Gender:</label>
+                <p>${customer.gender === 'M' ? 'Male' : 'Female'}</p>
+            </div>
+            <div>
+                <label>Email:</label>
+                <p>${customer.email_address}</p>
+            </div>
+            <div>
+                <label>Phone:</label>
+                <p>${customer.phone_number || '-'}</p>
+            </div>
+            <div>
+                <label>Address:</label>
+                <p>
+                    ${customer.address_line1}<br>
+                    ${customer.address_line2 ? customer.address_line2 + '<br>' : ''}
+                    ${customer.address_line3 ? customer.address_line3 + '<br>' : ''}
+                    ${customer.town}, ${customer.post_code}<br>
+                    ${customer.country}
+                </p>
+            </div>
+            <div>
+                <label>Member Since:</label>
+                <p>${new Date(customer.created_date).toLocaleDateString('en-GB')}</p>
+            </div>
+        </div>
+    </div>
+    
+    <h3>Booking History</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>Vehicle</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${bookings.map(booking => `
+                <tr>
+                    <td>${booking.booking_id}</td>
+                    <td>${booking.reg_number}</td>
+                    <td>${new Date(booking.date_from).toLocaleDateString('en-GB')}</td>
+                    <td>${new Date(booking.date_to).toLocaleDateString('en-GB')}</td>
+                    <td><span class="badge badge-${booking.booking_status_code}">${booking.booking_status_description}</span></td>
+                </tr>
+            `).join('')}
+        </tbody>
+    </table>
+    
+    <div class="form-actions">
+        <a href="/customers" class="btn btn-secondary">Back to Customers</a>
+    </div>
+</div>
+` }) %>

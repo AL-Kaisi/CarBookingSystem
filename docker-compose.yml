@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13-alpine
+    container_name: carbooking_db
+    environment:
+      POSTGRES_DB: carbooking
+      POSTGRES_USER: carbooking
+      POSTGRES_PASSWORD: carbooking123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/install-complete.sql:/docker-entrypoint-initdb.d/01-install.sql:ro
+      - ./scripts/install.sql:/docker-entrypoint-initdb.d/install.sql:ro
+      - ./sql/data/sample_data.sql:/docker-entrypoint-initdb.d/02-sample-data.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U carbooking"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - carbooking_network
+
+  web:
+    build: ./web
+    container_name: carbooking_web
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: carbooking
+      DB_USER: carbooking
+      DB_PASSWORD: carbooking123
+      SESSION_SECRET: car-booking-secret-key-change-in-production
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+    networks:
+      - carbooking_network
+    command: npm start
+
+volumes:
+  postgres_data:
+
+networks:
+  carbooking_network:
+    driver: bridge
